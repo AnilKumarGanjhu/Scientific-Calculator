@@ -1,0 +1,472 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Calculator Result</title>
+	</head>
+	<body>
+		<h2>Calculator Result</h2>
+		<p>
+			First Number : <strong th:text="${number1}"></strong>
+		</p>
+		<p>
+					Second Number : <strong th:text="${number2}"></strong>
+		</p>
+		<p>
+					Operation : <strong th:text="${operation}"></strong>
+		</p>
+		<p>
+					Result : <strong th:text="${result}"></strong>
+		</p>
+	</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Calculation Result</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #667eea,
+                    #764ba2
+                );
+
+            padding: 20px;
+        }
+
+
+        .result-card {
+
+            width: 420px;
+
+            background: #1e1e1e;
+
+            color: white;
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 50px
+                rgba(0, 0, 0, 0.35);
+        }
+
+
+        .title {
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            margin-bottom: 25px;
+        }
+
+
+        .expression-label {
+
+            color: #999;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .expression {
+
+            background: #111;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            font-size: 22px;
+
+            word-break: break-all;
+
+            margin-bottom: 20px;
+        }
+
+
+        .result-label {
+
+            color: #999;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .result {
+
+            background: #111;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            color: #7ee787;
+
+            font-size: 32px;
+
+            font-weight: bold;
+
+            word-break: break-all;
+
+            margin-bottom: 20px;
+        }
+
+
+        .mode {
+
+            color: #aaa;
+
+            font-size: 13px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        .btn {
+
+            flex: 1;
+
+            border: none;
+
+            border-radius: 12px;
+
+            padding: 14px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            transition: 0.15s;
+        }
+
+
+        .btn:hover {
+
+            transform: translateY(-2px);
+        }
+
+
+        .new-calculation {
+
+            background: #27ae60;
+
+            color: white;
+        }
+
+
+        .new-calculation:hover {
+
+            background: #2ecc71;
+        }
+
+
+        .back {
+
+            background: #333;
+
+            color: white;
+        }
+
+
+        .back:hover {
+
+            background: #444;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="result-card">
+
+
+    <!-- =====================================================
+         TITLE
+         ===================================================== -->
+
+    <div class="title">
+
+        Calculation Result
+
+    </div>
+
+
+    <!-- =====================================================
+         EXPRESSION
+         ===================================================== -->
+
+    <div class="expression-label">
+
+        Expression
+
+    </div>
+
+
+    <div
+            class="expression"
+            id="expressionDisplay"
+            th:text="${expression}">
+
+        2+2
+
+    </div>
+
+
+    <!-- =====================================================
+         RESULT
+         ===================================================== -->
+
+    <div class="result-label">
+
+        Result
+
+    </div>
+
+
+    <div
+            class="result"
+            id="resultDisplay"
+            th:text="${result}">
+
+        4
+
+    </div>
+
+
+    <!-- =====================================================
+         ANGLE MODE
+         ===================================================== -->
+
+    <div
+            class="mode"
+            th:if="${angleMode != null}">
+
+        Angle Mode:
+
+        <strong th:text="${angleMode}">
+            DEG
+        </strong>
+
+    </div>
+
+
+    <!-- =====================================================
+         BUTTONS
+         ===================================================== -->
+
+    <div class="buttons">
+
+
+        <a
+                href="/"
+                class="btn new-calculation">
+
+            New Calculation
+
+        </a>
+
+
+        <button
+                type="button"
+                class="btn back"
+                onclick="goBack()">
+
+            Back
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script th:inline="javascript">
+
+    /*
+     * Thymeleaf se Java values JavaScript
+     * variables mein aa jayengi.
+     */
+
+    const expression =
+        /*[[${expression}]]*/ "";
+
+
+    const result =
+        /*[[${result}]]*/ "";
+
+
+    const angleMode =
+        /*[[${angleMode}]]*/ "DEG";
+
+
+    // =========================================================
+    // SAVE HISTORY
+    // =========================================================
+
+    function saveHistory() {
+
+        let history =
+            JSON.parse(
+                localStorage.getItem(
+                    "calculatorHistory"
+                )
+            ) || [];
+
+
+        /*
+         * Same expression + same result
+         * already present hai to duplicate
+         * create nahi karenge.
+         */
+
+        const alreadyExists =
+            history.some(function(item) {
+
+                return (
+                    item.expression === expression
+                    &&
+                    String(item.result) ===
+                    String(result)
+                );
+
+            });
+
+
+        if (alreadyExists) {
+
+            return;
+        }
+
+
+        /*
+         * New history record
+         */
+
+        const historyItem = {
+
+            expression:
+                expression,
+
+            result:
+                result,
+
+            angleMode:
+                angleMode,
+
+            time:
+                new Date().toLocaleString()
+
+        };
+
+
+        /*
+         * New calculation ko top par rakho
+         */
+
+        history.unshift(
+            historyItem
+        );
+
+
+        /*
+         * Maximum 50 records
+         */
+
+        history =
+            history.slice(0, 50);
+
+
+        /*
+         * localStorage mein save
+         */
+
+        localStorage.setItem(
+            "calculatorHistory",
+            JSON.stringify(history)
+        );
+    }
+
+
+    // =========================================================
+    // BACK BUTTON
+    // =========================================================
+
+    function goBack() {
+
+        window.location.href = "/";
+
+    }
+
+
+    // =========================================================
+    // SAVE HISTORY WHEN PAGE LOADS
+    // =========================================================
+
+    saveHistory();
+
+</script>
+
+
+</body>
+
+</html>
