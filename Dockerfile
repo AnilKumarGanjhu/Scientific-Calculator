@@ -23,7 +23,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy generated JAR
-COPY --from=builder /app/target/tictactoe-1.0.0.jar app.jar
+COPY --from=builder /app/target/Calculator-0.0.1-SNAPSHOT.jar app.jar
 
 # Render will provide PORT automatically
 EXPOSE 8080
