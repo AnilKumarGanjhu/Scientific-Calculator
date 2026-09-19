@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Calculator.Service.CalculatorService;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 @Controller
 public class CalculatorController {
 
