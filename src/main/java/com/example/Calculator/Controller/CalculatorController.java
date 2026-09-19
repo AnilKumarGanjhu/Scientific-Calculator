@@ -10,7 +10,7 @@ import com.example.Calculator.Service.CalculatorService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Controller
 public class CalculatorController {
 
